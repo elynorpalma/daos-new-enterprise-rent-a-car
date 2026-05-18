@@ -1,13 +1,15 @@
-# daos-new-enterprise-rent-a-car
 # Proyecto Enterprise Fleet Manager
 
-Guía para el desarrollo de la aplicación web **Enterprise Fleet Manager** usando Angular, Angular Material, json-server y ngx-translate.
+Guía paso a paso para el desarrollo de la aplicación web **Enterprise Fleet Manager** usando Angular, Angular Material, json-server y ngx-translate, siguiendo el patrón del curso DAOS (1ASI0729).
+
+> Reemplaza `<nrc>` con el NRC de tu sección y `<codigo>` con tu código de estudiante en minúsculas.
+> Ejemplo: `ea7377u20241a972`
 
 ---
 
 ## Creación del proyecto
 
-> **En equipos MAC:** antecede `sudo` a los comandos `ng` e ingresa la contraseña del administrador.
+> **En equipos MAC:** antecede `sudo` a los comandos `ng` e ingresa la contraseña del administrador (`d3v3l0p3rUPC`).
 >
 > **En equipos Windows:** ubícate en la carpeta `IdeaProjects/` o una de tu preferencia.
 
@@ -15,65 +17,76 @@ Guía para el desarrollo de la aplicación web **Enterprise Fleet Manager** usan
 
 Abre el terminal y ejecuta:
 
-```bash
+```
 ng new ea<nrc>u<codigo>
 ```
 
-> Reemplaza `<nrc>` con el NRC de tu sección y `<codigo>` con tu código de estudiante en minúsculas.  
-> Ejemplo: `ea7377u20241a972`
-
 Cuando el CLI muestre las opciones, selecciona:
 
-- *Which stylesheet format would you like to use?*
+*? Which stylesheet format would you like to use?*, seleccionar:
 
 ```
-SCSS   [ https://sass-lang.com/documentation/syntax#scss ]
+SCSS
 ```
 
-- *Do you want to enable Server-Side Rendering (SSR)?*
+*? Do you want to enable Server-Side Rendering (SSR) and Static Site Generation (SSG/Prerendering)?*, digitar:
 
 ```
 N
 ```
 
-### Instalar Angular Material
+### Instalación de Angular Material
 
-Ingresa a la carpeta del proyecto:
+Ingresar a la carpeta creada con el mismo nombre que el proyecto ejecutando:
 
-```bash
+```
 cd ea<nrc>u<codigo>
 ```
 
-Ejecuta:
+Agregar Angular Material a la aplicación:
 
-```bash
+```
 ng add @angular/material
 ```
 
 Cuando pregunte:
 
-- *Would you like to proceed?* → `Y`
-- *Select a pair of starter prebuilt color palettes* → selecciona la que tenga mayor similitud con el design system del cliente (para Enterprise Rent-A-Car se recomienda **Rose/Red**)
+- *Would you like to proceed? (Y/n)*, digitar: `Y`
+- *Select a pair of starter prebuilt color palettes*, seleccionar:
 
-### Instalar ngx-translate (i18n)
+```
+Rose/Red
+```
 
-```bash
+> Enterprise Rent-A-Car usa rojo como color principal. Esta paleta es la más cercana.
+
+### Instalación de ngx-translate (i18n)
+
+```
 npm install @ngx-translate/core @ngx-translate/http-loader --save
 ```
 
-### Instalar json-server
+### Instalación de json-server
 
-```bash
+```
 npm install -g json-server@0.17.4
 ```
 
 ---
 
-## Configuración del proyecto
+## Desarrollo del proyecto
 
-### Archivos de idioma (i18n)
+Cargar IntelliJ IDEA y abrir el proyecto. Cargar el Terminal del IDE y ejecutar:
 
-Crea las carpetas `assets/i18n` dentro de `public/`:
+```
+ng serve --port 4200
+```
+
+---
+
+## Creación de los archivos de idioma
+
+Crear las carpetas `assets` e `i18n` en la carpeta `public` ubicada en la raíz del proyecto:
 
 ```
 📂 public
@@ -81,13 +94,14 @@ Crea las carpetas `assets/i18n` dentro de `public/`:
     📂 i18n
 ```
 
-Crea los archivos `en.json` y `es.json`:
+Crear los archivos `en.json` y `es.json` en la carpeta `i18n` con el siguiente contenido:
 
-#### en.json
+### en.json
 
 ```json
 {
   "toolbar": {
+    "title": "Enterprise Fleet Manager",
     "home": "Home",
     "newRental": "New Rental"
   },
@@ -112,17 +126,18 @@ Crea los archivos `en.json` y `es.json`:
     "cancel": "Cancel"
   },
   "notFound": {
-    "message": "Page not found:",
+    "message": "The route was not found:",
     "back": "Go to Home"
   }
 }
 ```
 
-#### es.json
+### es.json
 
 ```json
 {
   "toolbar": {
+    "title": "Enterprise Fleet Manager",
     "home": "Inicio",
     "newRental": "Nuevo Alquiler"
   },
@@ -147,15 +162,17 @@ Crea los archivos `en.json` y `es.json`:
     "cancel": "Cancelar"
   },
   "notFound": {
-    "message": "Página no encontrada:",
-    "back": "Ir a Inicio"
+    "message": "La ruta no fue encontrada:",
+    "back": "Ir al Inicio"
   }
 }
 ```
 
-### Configuración del json-server
+---
 
-Crea la carpeta `server/` en la raíz del proyecto y coloca dentro el archivo `db.json` proporcionado en el examen:
+## Configuración del json-server
+
+Crear la carpeta `server` en la raíz del proyecto y copiar dentro el archivo `db.json` proporcionado en el examen:
 
 ```
 📂 ea<nrc>u<codigo>
@@ -163,48 +180,58 @@ Crea la carpeta `server/` en la raíz del proyecto y coloca dentro el archivo `d
     db.json
 ```
 
-Para iniciar el fake API, abre una nueva pestaña del terminal y ejecuta:
+Cargar el Terminal del IDE y agregar un nuevo Tab. Ejecutar el siguiente comando para iniciar el json-server:
 
-```bash
+```
 cd server
 json-server --watch db.json
 ```
 
-Verifica los endpoints en el navegador:
+Verificar que los endpoints funcionen en el navegador:
 
 - http://localhost:3000/vehicles
 - http://localhost:3000/rentals
 - http://localhost:3000/incidents
 
-### Configuración de environments
+---
 
-Ejecuta en el terminal:
+## Configuración de environments
 
-```bash
+Cargar el Terminal del IDE y ejecutar:
+
+```
 ng generate environments
 ```
 
-Modifica `src/environments/environment.development.ts`:
+El archivo `environment.development.ts` ubicado en `src/environments` debe quedar así:
 
 ```typescript
 export const environment = {
   production: false,
-  serverBasePath: 'http://localhost:3000'
+  serverBasePath: 'http://localhost:3000',
+  vehiclesEndpointPath: '/vehicles',
+  rentalsEndpointPath: '/rentals',
+  incidentsEndpointPath: '/incidents'
 };
 ```
 
-Modifica `src/environments/environment.ts`:
+El archivo `environment.ts` ubicado en `src/environments` debe quedar así:
 
 ```typescript
 export const environment = {
   production: true,
-  serverBasePath: 'http://localhost:3000'
+  serverBasePath: 'http://localhost:3000',
+  vehiclesEndpointPath: '/vehicles',
+  rentalsEndpointPath: '/rentals',
+  incidentsEndpointPath: '/incidents'
 };
 ```
 
-### Configuración del appConfig
+---
 
-Modifica `src/app/app.config.ts`:
+## Configuración del appConfig
+
+Reemplazar el contenido del archivo `app.config.ts` ubicado en `src/app`:
 
 ```typescript
 import { ApplicationConfig, provideAppInitializer, inject } from '@angular/core';
@@ -227,7 +254,7 @@ export const appConfig: ApplicationConfig = {
     }),
     provideAppInitializer(() => {
       const translate = inject(TranslateService);
-      translate.use('en');
+      translate.use(translate.getBrowserLang() || 'en');
     })
   ]
 };
@@ -235,48 +262,54 @@ export const appConfig: ApplicationConfig = {
 
 ---
 
-## Estructura del proyecto (Domain-Driven)
+## Creación de la estructura del proyecto
 
-Crea la siguiente estructura de carpetas dentro de `src/app/`:
+Crear la siguiente estructura de carpetas en `src/app`:
 
 ```
-📂 src/app
-  📂 shared
-    📂 domain
-    📂 infrastructure
-    📂 presentation
-      📂 components
-      📂 views
-  📂 masters                  ← vehicles
-    📂 domain
-      📂 model
-    📂 application
-    📂 infrastructure
-    📂 presentation
-      📂 components
-      📂 views
-  📂 operations               ← rentals + incidents
-    📂 domain
-      📂 model
-    📂 application
-    📂 infrastructure
-    📂 presentation
-      📂 components
-      📂 views
+📂 src
+  📂 app
+    📂 masters
+      📂 application
+      📂 domain
+        📂 model
+      📂 infrastructure
+      📂 presentation
+        📂 components
+        📂 views
+    📂 operations
+      📂 application
+      📂 domain
+        📂 model
+      📂 infrastructure
+      📂 presentation
+        📂 components
+        📂 views
+    📂 shared
+      📂 infrastructure
+      📂 presentation
+        📂 components
+        📂 views
 ```
 
 ---
 
-## Modelos (Domain Layer)
+## Domain Layer — Modelos (entities)
 
-### Vehicle
+### Creación del modelo Vehicle
 
-Crea el archivo `src/app/masters/domain/model/vehicle.entity.ts`:
+Cargar el Terminal del IDE y ejecutar:
+
+```
+ng generate class masters/domain/model/vehicle --type=entity --skip-tests=true
+```
+
+Reemplazar el contenido del archivo `vehicle.entity.ts` ubicado en `src/app/masters/domain/model`:
 
 ```typescript
 /**
- * @summary Vehicle entity representing a fleet unit.
- * @author Tu Nombre y Apellido
+ * @summary Vehicle entity representing a fleet unit in the masters bounded context.
+ * @author Elynor Palma
  */
 export class Vehicle {
   id: number;
@@ -284,8 +317,8 @@ export class Vehicle {
   model: string;
   mileageKm: number;
   dailyRate: number;
-  vehicleType: 'ECONOMY' | 'SUV' | 'LUXURY';
-  status: 'AVAILABLE' | 'RENTED' | 'MAINTENANCE';
+  vehicleType: string;
+  status: string;
 
   constructor() {
     this.id = 0;
@@ -293,84 +326,104 @@ export class Vehicle {
     this.model = '';
     this.mileageKm = 0;
     this.dailyRate = 0;
-    this.vehicleType = 'ECONOMY';
-    this.status = 'AVAILABLE';
+    this.vehicleType = '';
+    this.status = '';
   }
 }
 ```
 
-### Rental
+### Creación del modelo Rental
 
-Crea `src/app/operations/domain/model/rental.entity.ts`:
+Ejecutar:
+
+```
+ng generate class operations/domain/model/rental --type=entity --skip-tests=true
+```
+
+Reemplazar el contenido del archivo `rental.entity.ts` ubicado en `src/app/operations/domain/model`:
 
 ```typescript
 /**
- * @summary Rental entity representing a vehicle rental contract.
- * @author Tu Nombre y Apellido
+ * @summary Rental entity representing a vehicle rental contract in the operations bounded context.
+ * @author Elynor Palma
  */
 export class Rental {
-  id?: number;
+  id: number;
   vehicleId: number;
   clientId: number;
   startDate: string;
   endDate: string;
   durationDays: number;
   totalCost: number;
-  status: 'ACTIVE' | 'COMPLETED' | 'CANCELED';
+  status: string;
 
   constructor() {
+    this.id = 0;
     this.vehicleId = 0;
     this.clientId = 0;
     this.startDate = '';
     this.endDate = '';
     this.durationDays = 0;
     this.totalCost = 0;
-    this.status = 'ACTIVE';
+    this.status = '';
   }
 }
 ```
 
-### Incident
+### Creación del modelo Incident
 
-Crea `src/app/operations/domain/model/incident.entity.ts`:
+Ejecutar:
+
+```
+ng generate class operations/domain/model/incident --type=entity --skip-tests=true
+```
+
+Reemplazar el contenido del archivo `incident.entity.ts` ubicado en `src/app/operations/domain/model`:
 
 ```typescript
 /**
- * @summary Incident entity representing a vehicle incident or maintenance event.
- * @author Tu Nombre y Apellido
+ * @summary Incident entity representing a vehicle incident or maintenance event in the operations bounded context.
+ * @author Elynor Palma
  */
 export class Incident {
-  id?: number;
+  id: number;
   vehicleId: number;
   rentalId: number | null;
-  incidentType: 'DAMAGE' | 'BREAKDOWN' | 'CLEANING' | 'REPAIR';
+  incidentType: string;
   registeredAt: string;
   estimatedRepairCost: number;
-  priority: 'HIGH' | 'NORMAL';
+  priority: string;
 
   constructor() {
+    this.id = 0;
     this.vehicleId = 0;
     this.rentalId = null;
-    this.incidentType = 'CLEANING';
+    this.incidentType = '';
     this.registeredAt = '';
     this.estimatedRepairCost = 0;
-    this.priority = 'NORMAL';
+    this.priority = '';
   }
 }
 ```
 
 ---
 
-## Infrastructure Layer
+## Infrastructure Layer — Response interfaces
 
-### Response interfaces
+### Creación de VehicleResponse
 
-Crea `src/app/masters/infrastructure/vehicle.response.ts`:
+Ejecutar:
+
+```
+ng generate interface masters/infrastructure/vehicle-response
+```
+
+Reemplazar el contenido del archivo `vehicle-response.ts` ubicado en `src/app/masters/infrastructure`:
 
 ```typescript
 /**
- * @summary Vehicle response interface for API deserialization.
- * @author Tu Nombre y Apellido
+ * @summary Vehicle response interface for REST API deserialization.
+ * @author Elynor Palma
  */
 export interface VehicleResponse {
   id: number;
@@ -383,12 +436,20 @@ export interface VehicleResponse {
 }
 ```
 
-Crea `src/app/operations/infrastructure/rental.response.ts`:
+### Creación de RentalResponse
+
+Ejecutar:
+
+```
+ng generate interface operations/infrastructure/rental-response
+```
+
+Reemplazar el contenido del archivo `rental-response.ts` ubicado en `src/app/operations/infrastructure`:
 
 ```typescript
 /**
- * @summary Rental response interface for API deserialization.
- * @author Tu Nombre y Apellido
+ * @summary Rental response interface for REST API deserialization.
+ * @author Elynor Palma
  */
 export interface RentalResponse {
   id: number;
@@ -402,12 +463,20 @@ export interface RentalResponse {
 }
 ```
 
-Crea `src/app/operations/infrastructure/incident.response.ts`:
+### Creación de IncidentResponse
+
+Ejecutar:
+
+```
+ng generate interface operations/infrastructure/incident-response
+```
+
+Reemplazar el contenido del archivo `incident-response.ts` ubicado en `src/app/operations/infrastructure`:
 
 ```typescript
 /**
- * @summary Incident response interface for API deserialization.
- * @author Tu Nombre y Apellido
+ * @summary Incident response interface for REST API deserialization.
+ * @author Elynor Palma
  */
 export interface IncidentResponse {
   id: number;
@@ -420,195 +489,357 @@ export interface IncidentResponse {
 }
 ```
 
-### Assemblers
+---
 
-Crea `src/app/masters/infrastructure/vehicle.assembler.ts`:
+## Infrastructure Layer — Assemblers
+
+### Creación de VehicleAssembler
+
+Ejecutar:
+
+```
+ng generate class masters/infrastructure/vehicle-assembler --skip-tests=true
+```
+
+Agregar los siguientes imports al archivo `vehicle-assembler.ts` ubicado en `src/app/masters/infrastructure`:
+
+```typescript
+import { VehicleResponse } from './vehicle-response';
+import { Vehicle } from '../domain/model/vehicle.entity';
+```
+
+Reemplazar el contenido de la clase `VehicleAssembler` con el siguiente código:
 
 ```typescript
 /**
- * @summary Assembler for converting VehicleResponse to Vehicle entity.
- * @author Tu Nombre y Apellido
+ * @summary Assembler for mapping VehicleResponse to Vehicle entity.
+ * @author Elynor Palma
  */
-import { VehicleResponse } from './vehicle.response';
-import { Vehicle } from '../domain/model/vehicle.entity';
+static toEntityFromResponseArray(responseArray: VehicleResponse[]): Vehicle[] {
+  return responseArray.map((response) => this.toEntityFromResponse(response));
+}
 
-export class VehicleAssembler {
-  static toEntityFromResponse(response: VehicleResponse): Vehicle {
-    const vehicle = new Vehicle();
-    vehicle.id = response.id;
-    vehicle.make = response.make;
-    vehicle.model = response.model;
-    vehicle.mileageKm = response.mileageKm;
-    vehicle.dailyRate = response.dailyRate;
-    vehicle.vehicleType = response.vehicleType as Vehicle['vehicleType'];
-    vehicle.status = response.status as Vehicle['status'];
-    return vehicle;
-  }
-
-  static toEntityFromResponseArray(responseArray: VehicleResponse[]): Vehicle[] {
-    return responseArray.map(r => this.toEntityFromResponse(r));
-  }
+static toEntityFromResponse(response: VehicleResponse): Vehicle {
+  const vehicle = new Vehicle();
+  vehicle.id = response.id;
+  vehicle.make = response.make;
+  vehicle.model = response.model;
+  vehicle.mileageKm = response.mileageKm;
+  vehicle.dailyRate = response.dailyRate;
+  vehicle.vehicleType = response.vehicleType;
+  vehicle.status = response.status;
+  return vehicle;
 }
 ```
 
-### API Services
+### Creación de RentalAssembler
 
-Crea `src/app/masters/infrastructure/vehicle-api.service.ts`:
+Ejecutar:
 
-```typescript
-/**
- * @summary API service for vehicle data access via HTTP.
- * @author Tu Nombre y Apellido
- */
-import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { map, Observable } from 'rxjs';
-import { environment } from '../../../environments/environment';
-import { Vehicle } from '../domain/model/vehicle.entity';
-import { VehicleResponse } from './vehicle.response';
-import { VehicleAssembler } from './vehicle.assembler';
-
-@Injectable({ providedIn: 'root' })
-export class VehicleApiService {
-  private baseUrl = `${environment.serverBasePath}/vehicles`;
-  private http = inject(HttpClient);
-
-  getAll(): Observable<Vehicle[]> {
-    return this.http.get<VehicleResponse[]>(this.baseUrl)
-      .pipe(map(res => VehicleAssembler.toEntityFromResponseArray(res)));
-  }
-}
+```
+ng generate class operations/infrastructure/rental-assembler --skip-tests=true
 ```
 
-Crea `src/app/operations/infrastructure/rental-api.service.ts`:
+Agregar los siguientes imports al archivo `rental-assembler.ts` ubicado en `src/app/operations/infrastructure`:
 
 ```typescript
-/**
- * @summary API service for rental data access via HTTP.
- * @author Tu Nombre y Apellido
- */
-import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { RentalResponse } from './rental-response';
 import { Rental } from '../domain/model/rental.entity';
-
-@Injectable({ providedIn: 'root' })
-export class RentalApiService {
-  private baseUrl = `${environment.serverBasePath}/rentals`;
-  private http = inject(HttpClient);
-
-  getAll(): Observable<Rental[]> {
-    return this.http.get<Rental[]>(this.baseUrl);
-  }
-
-  create(rental: Rental): Observable<Rental> {
-    return this.http.post<Rental>(this.baseUrl, rental);
-  }
-}
 ```
 
-Crea `src/app/operations/infrastructure/incident-api.service.ts`:
+Reemplazar el contenido de la clase `RentalAssembler` con el siguiente código:
 
 ```typescript
 /**
- * @summary API service for incident data access via HTTP.
- * @author Tu Nombre y Apellido
+ * @summary Assembler for mapping RentalResponse to Rental entity.
+ * @author Elynor Palma
  */
-import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { environment } from '../../../environments/environment';
+static toEntityFromResponseArray(responseArray: RentalResponse[]): Rental[] {
+  return responseArray.map((response) => this.toEntityFromResponse(response));
+}
+
+static toEntityFromResponse(response: RentalResponse): Rental {
+  const rental = new Rental();
+  rental.id = response.id;
+  rental.vehicleId = response.vehicleId;
+  rental.clientId = response.clientId;
+  rental.startDate = response.startDate;
+  rental.endDate = response.endDate;
+  rental.durationDays = response.durationDays;
+  rental.totalCost = response.totalCost;
+  rental.status = response.status;
+  return rental;
+}
+```
+
+### Creación de IncidentAssembler
+
+Ejecutar:
+
+```
+ng generate class operations/infrastructure/incident-assembler --skip-tests=true
+```
+
+Agregar los siguientes imports al archivo `incident-assembler.ts` ubicado en `src/app/operations/infrastructure`:
+
+```typescript
+import { IncidentResponse } from './incident-response';
 import { Incident } from '../domain/model/incident.entity';
+```
 
-@Injectable({ providedIn: 'root' })
-export class IncidentApiService {
-  private baseUrl = `${environment.serverBasePath}/incidents`;
-  private http = inject(HttpClient);
+Reemplazar el contenido de la clase `IncidentAssembler` con el siguiente código:
 
-  getAll(): Observable<Incident[]> {
-    return this.http.get<Incident[]>(this.baseUrl);
-  }
+```typescript
+/**
+ * @summary Assembler for mapping IncidentResponse to Incident entity.
+ * @author Elynor Palma
+ */
+static toEntityFromResponseArray(responseArray: IncidentResponse[]): Incident[] {
+  return responseArray.map((response) => this.toEntityFromResponse(response));
+}
 
-  create(incident: Incident): Observable<Incident> {
-    return this.http.post<Incident>(this.baseUrl, incident);
-  }
+static toEntityFromResponse(response: IncidentResponse): Incident {
+  const incident = new Incident();
+  incident.id = response.id;
+  incident.vehicleId = response.vehicleId;
+  incident.rentalId = response.rentalId;
+  incident.incidentType = response.incidentType;
+  incident.registeredAt = response.registeredAt;
+  incident.estimatedRepairCost = response.estimatedRepairCost;
+  incident.priority = response.priority;
+  return incident;
 }
 ```
 
 ---
 
-## Application Layer (Stores con Signals)
+## Infrastructure Layer — API Services
 
-### VehicleStore
+### Creación del VehicleApi Service
 
-Crea `src/app/masters/application/vehicle-store.service.ts`:
+Ejecutar:
+
+```
+ng generate service masters/infrastructure/vehicle-api --skip-tests=true
+```
+
+Agregar los siguientes imports al archivo `vehicle-api.service.ts` ubicado en `src/app/masters/infrastructure`:
+
+```typescript
+import { inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { map, Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { Vehicle } from '../domain/model/vehicle.entity';
+import { VehicleResponse } from './vehicle-response';
+import { VehicleAssembler } from './vehicle-assembler';
+```
+
+Reemplazar el contenido de la clase `VehicleApiService` con el siguiente código:
+
+```typescript
+/**
+ * @summary API service for vehicle data access via HTTP following the Api pattern.
+ * @author Elynor Palma
+ */
+private baseUrl: string = environment.serverBasePath;
+private vehiclesEndpoint: string = environment.vehiclesEndpointPath;
+private http: HttpClient = inject(HttpClient);
+
+getAll(): Observable<Vehicle[]> {
+  return this.http.get<VehicleResponse[]>(`${this.baseUrl}${this.vehiclesEndpoint}`)
+    .pipe(
+      map(responseArray => VehicleAssembler.toEntityFromResponseArray(responseArray))
+    );
+}
+```
+
+### Creación del RentalApi Service
+
+Ejecutar:
+
+```
+ng generate service operations/infrastructure/rental-api --skip-tests=true
+```
+
+Agregar los siguientes imports al archivo `rental-api.service.ts` ubicado en `src/app/operations/infrastructure`:
+
+```typescript
+import { inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { map, Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { Rental } from '../domain/model/rental.entity';
+import { RentalResponse } from './rental-response';
+import { RentalAssembler } from './rental-assembler';
+```
+
+Reemplazar el contenido de la clase `RentalApiService` con el siguiente código:
+
+```typescript
+/**
+ * @summary API service for rental data access via HTTP following the Api pattern.
+ * @author Elynor Palma
+ */
+private baseUrl: string = environment.serverBasePath;
+private rentalsEndpoint: string = environment.rentalsEndpointPath;
+private http: HttpClient = inject(HttpClient);
+
+getAll(): Observable<Rental[]> {
+  return this.http.get<RentalResponse[]>(`${this.baseUrl}${this.rentalsEndpoint}`)
+    .pipe(
+      map(responseArray => RentalAssembler.toEntityFromResponseArray(responseArray))
+    );
+}
+
+create(rental: Rental): Observable<Rental> {
+  return this.http.post<RentalResponse>(`${this.baseUrl}${this.rentalsEndpoint}`, rental)
+    .pipe(
+      map(response => RentalAssembler.toEntityFromResponse(response))
+    );
+}
+```
+
+### Creación del IncidentApi Service
+
+Ejecutar:
+
+```
+ng generate service operations/infrastructure/incident-api --skip-tests=true
+```
+
+Agregar los siguientes imports al archivo `incident-api.service.ts` ubicado en `src/app/operations/infrastructure`:
+
+```typescript
+import { inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { map, Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { Incident } from '../domain/model/incident.entity';
+import { IncidentResponse } from './incident-response';
+import { IncidentAssembler } from './incident-assembler';
+```
+
+Reemplazar el contenido de la clase `IncidentApiService` con el siguiente código:
+
+```typescript
+/**
+ * @summary API service for incident data access via HTTP following the Api pattern.
+ * @author Elynor Palma
+ */
+private baseUrl: string = environment.serverBasePath;
+private incidentsEndpoint: string = environment.incidentsEndpointPath;
+private http: HttpClient = inject(HttpClient);
+
+getAll(): Observable<Incident[]> {
+  return this.http.get<IncidentResponse[]>(`${this.baseUrl}${this.incidentsEndpoint}`)
+    .pipe(
+      map(responseArray => IncidentAssembler.toEntityFromResponseArray(responseArray))
+    );
+}
+
+create(incident: Incident): Observable<Incident> {
+  return this.http.post<IncidentResponse>(`${this.baseUrl}${this.incidentsEndpoint}`, incident)
+    .pipe(
+      map(response => IncidentAssembler.toEntityFromResponse(response))
+    );
+}
+```
+
+---
+
+## Application Layer — Store Services
+
+### Creación del VehicleStore Service
+
+Ejecutar:
+
+```
+ng generate service masters/application/vehicle-store --skip-tests=true
+```
+
+Agregar los siguientes imports al archivo `vehicle-store.service.ts` ubicado en `src/app/masters/application`:
+
+```typescript
+import { computed, inject, Signal, signal, WritableSignal } from '@angular/core';
+import { Vehicle } from '../domain/model/vehicle.entity';
+import { VehicleApiService } from '../infrastructure/vehicle-api.service';
+```
+
+Reemplazar el contenido de la clase `VehicleStoreService` con el siguiente código:
 
 ```typescript
 /**
  * @summary Store service for vehicle state management using Angular Signals.
- * @author Tu Nombre y Apellido
+ * @author Elynor Palma
  */
-import { computed, inject, Injectable, signal } from '@angular/core';
-import { Vehicle } from '../domain/model/vehicle.entity';
-import { VehicleApiService } from '../infrastructure/vehicle-api.service';
+private vehiclesSignal: WritableSignal<Vehicle[]> = signal<Vehicle[]>([]);
+private vehicleApi: VehicleApiService = inject(VehicleApiService);
 
-@Injectable({ providedIn: 'root' })
-export class VehicleStoreService {
-  private vehiclesSignal = signal<Vehicle[]>([]);
-  private api = inject(VehicleApiService);
+readonly vehicles: Signal<Vehicle[]> = computed(() => this.vehiclesSignal());
 
-  readonly vehicles = computed(() => this.vehiclesSignal());
-
-  loadAll(): void {
-    if (this.vehiclesSignal().length === 0) {
-      this.api.getAll().subscribe(v => this.vehiclesSignal.set(v));
-    }
+loadAll(): void {
+  if (this.vehiclesSignal().length === 0) {
+    this.vehicleApi.getAll().subscribe(vehicles => {
+      this.vehiclesSignal.set(vehicles);
+    });
   }
 }
 ```
 
-### OperationsStore
+### Creación del OperationsStore Service
 
-Crea `src/app/operations/application/operations-store.service.ts`:
+Ejecutar:
+
+```
+ng generate service operations/application/operations-store --skip-tests=true
+```
+
+Agregar los siguientes imports al archivo `operations-store.service.ts` ubicado en `src/app/operations/application`:
 
 ```typescript
-/**
- * @summary Store service for rentals and incidents state management using Angular Signals.
- * @author Tu Nombre y Apellido
- */
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Signal, signal, WritableSignal } from '@angular/core';
+import { Observable } from 'rxjs';
 import { Rental } from '../domain/model/rental.entity';
 import { Incident } from '../domain/model/incident.entity';
 import { RentalApiService } from '../infrastructure/rental-api.service';
 import { IncidentApiService } from '../infrastructure/incident-api.service';
+```
 
-@Injectable({ providedIn: 'root' })
-export class OperationsStoreService {
-  private rentalsSignal = signal<Rental[]>([]);
-  private incidentsSignal = signal<Incident[]>([]);
-  private rentalApi = inject(RentalApiService);
-  private incidentApi = inject(IncidentApiService);
+Reemplazar el contenido de la clase `OperationsStoreService` con el siguiente código:
 
-  readonly rentals = computed(() => this.rentalsSignal());
-  readonly incidents = computed(() => this.incidentsSignal());
+```typescript
+/**
+ * @summary Store service for rentals and incidents state management using Angular Signals.
+ * @author Elynor Palma
+ */
+private rentalsSignal: WritableSignal<Rental[]> = signal<Rental[]>([]);
+private incidentsSignal: WritableSignal<Incident[]> = signal<Incident[]>([]);
+private rentalApi: RentalApiService = inject(RentalApiService);
+private incidentApi: IncidentApiService = inject(IncidentApiService);
 
-  loadAll(): void {
-    if (this.rentalsSignal().length === 0) {
-      this.rentalApi.getAll().subscribe(r => this.rentalsSignal.set(r));
-    }
-    if (this.incidentsSignal().length === 0) {
-      this.incidentApi.getAll().subscribe(i => this.incidentsSignal.set(i));
-    }
+readonly rentals: Signal<Rental[]> = computed(() => this.rentalsSignal());
+readonly incidents: Signal<Incident[]> = computed(() => this.incidentsSignal());
+
+loadAll(): void {
+  if (this.rentalsSignal().length === 0) {
+    this.rentalApi.getAll().subscribe(rentals => {
+      this.rentalsSignal.set(rentals);
+    });
   }
-
-  createRental(rental: Rental) {
-    return this.rentalApi.create(rental);
+  if (this.incidentsSignal().length === 0) {
+    this.incidentApi.getAll().subscribe(incidents => {
+      this.incidentsSignal.set(incidents);
+    });
   }
+}
 
-  createIncident(incident: Incident) {
-    return this.incidentApi.create(incident);
-  }
+createRental(rental: Rental): Observable<Rental> {
+  return this.rentalApi.create(rental);
+}
+
+createIncident(incident: Incident): Observable<Incident> {
+  return this.incidentApi.create(incident);
 }
 ```
 
@@ -616,12 +847,12 @@ export class OperationsStoreService {
 
 ## Routing
 
-Modifica `src/app/app.routes.ts`:
+Reemplazar el contenido del archivo `app.routes.ts` ubicado en `src/app`:
 
 ```typescript
 /**
- * @summary Application routing configuration with semantic and child routes.
- * @author Tu Nombre y Apellido
+ * @summary Application routing configuration with semantic routes and child routes by bounded context.
+ * @author Elynor Palma
  */
 import { Routes } from '@angular/router';
 
@@ -630,7 +861,8 @@ export const routes: Routes = [
   {
     path: 'home',
     loadComponent: () =>
-      import('./shared/presentation/views/home/home.component').then(m => m.HomeComponent)
+      import('./shared/presentation/views/home/home.component')
+        .then(m => m.HomeComponent)
   },
   {
     path: 'operations',
@@ -638,120 +870,92 @@ export const routes: Routes = [
       {
         path: 'rentals/new',
         loadComponent: () =>
-          import('./operations/presentation/views/new-rental/new-rental.component').then(m => m.NewRentalComponent)
+          import('./operations/presentation/views/new-rental/new-rental.component')
+            .then(m => m.NewRentalComponent)
       }
     ]
   },
   {
     path: '**',
     loadComponent: () =>
-      import('./shared/presentation/views/page-not-found/page-not-found.component').then(m => m.PageNotFoundComponent)
+      import('./shared/presentation/views/page-not-found/page-not-found.component')
+        .then(m => m.PageNotFoundComponent)
   }
 ];
 ```
 
 ---
 
-## Componentes
+## Creación de componentes
 
-### Generar los componentes con Angular CLI
+Cargar el Terminal del IDE y ejecutar los siguientes comandos uno a la vez:
 
-Ejecuta los siguientes comandos uno por uno en el terminal:
-
-```bash
+```
 ng generate component shared/presentation/components/toolbar --skip-tests=true
+```
+
+```
 ng generate component shared/presentation/components/language-switcher --skip-tests=true
+```
+
+```
 ng generate component shared/presentation/views/home --skip-tests=true
+```
+
+```
 ng generate component shared/presentation/views/page-not-found --skip-tests=true
+```
+
+```
 ng generate component masters/presentation/components/vehicle-type-stats --skip-tests=true
+```
+
+```
 ng generate component operations/presentation/components/next-urgent-incident --skip-tests=true
+```
+
+```
 ng generate component operations/presentation/views/new-rental --skip-tests=true
 ```
 
-### ToolbarComponent
+---
 
-`src/app/shared/presentation/components/toolbar/toolbar.component.ts`:
+## Modificación del LanguageSwitcherComponent
+
+Agregar los siguientes imports al archivo `language-switcher.component.ts` ubicado en `src/app/shared/presentation/components/language-switcher`:
 
 ```typescript
-/**
- * @summary Toolbar component with logo, navigation links, and language switcher.
- * @author Tu Nombre y Apellido
- */
-import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatButtonModule } from '@angular/material/button';
-import { TranslateModule } from '@ngx-translate/core';
-import { LanguageSwitcherComponent } from '../language-switcher/language-switcher.component';
-
-@Component({
-  selector: 'app-toolbar',
-  standalone: true,
-  imports: [MatToolbarModule, MatButtonModule, RouterLink, TranslateModule, LanguageSwitcherComponent],
-  templateUrl: './toolbar.component.html',
-  styleUrl: './toolbar.component.scss'
-})
-export class ToolbarComponent {}
+import { TranslateService } from '@ngx-translate/core';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 ```
 
-`toolbar.component.html`:
+Agregar las siguientes clases en el array `imports` del decorator `@Component`:
 
-```html
-<mat-toolbar color="primary" role="navigation" aria-label="Enterprise Fleet Manager Navigation">
-  <img
-    src="https://logo.clearbit.com/enterprise.com"
-    alt="Enterprise Rent-A-Car logo"
-    height="36"
-    style="margin-right: 8px"
-  />
-  <span>Enterprise Fleet Manager</span>
-
-  <span style="flex: 1 1 auto;"></span>
-
-  <a mat-button routerLink="/home" aria-label="Home">{{ 'toolbar.home' | translate }}</a>
-  <a mat-button routerLink="/operations/rentals/new" aria-label="New Rental">{{ 'toolbar.newRental' | translate }}</a>
-
-  <span style="margin-left: 16px;">
-    <app-language-switcher />
-  </span>
-</mat-toolbar>
+```typescript
+MatButtonToggleModule
 ```
 
-### LanguageSwitcherComponent
-
-`language-switcher.component.ts`:
+Reemplazar el contenido de la clase `LanguageSwitcherComponent` con el siguiente código:
 
 ```typescript
 /**
  * @summary Language switcher component for toggling between EN and ES.
- * @author Tu Nombre y Apellido
+ * @author Elynor Palma
  */
-import { Component } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
+currentLang = 'en';
+languages = ['en', 'es'];
 
-@Component({
-  selector: 'app-language-switcher',
-  standalone: true,
-  imports: [MatButtonToggleModule],
-  templateUrl: './language-switcher.component.html'
-})
-export class LanguageSwitcherComponent {
-  currentLang = 'en';
-  languages = ['en', 'es'];
+constructor(private translate: TranslateService) {
+  this.currentLang = translate.currentLang || 'en';
+}
 
-  constructor(private translate: TranslateService) {
-    this.currentLang = translate.currentLang || 'en';
-  }
-
-  useLanguage(lang: string): void {
-    this.currentLang = lang;
-    this.translate.use(lang);
-  }
+useLanguage(language: string): void {
+  this.currentLang = language;
+  this.translate.use(language);
 }
 ```
 
-`language-switcher.component.html`:
+Reemplazar el contenido del archivo `language-switcher.component.html`:
 
 ```html
 <mat-button-toggle-group
@@ -759,26 +963,91 @@ export class LanguageSwitcherComponent {
   appearance="standard"
   aria-label="Language selector"
   name="language">
-  @for (lang of languages; track lang) {
+  @for (language of languages; track language) {
     <mat-button-toggle
-      [value]="lang"
-      [aria-label]="lang"
-      (click)="useLanguage(lang)">
-      {{ lang.toUpperCase() }}
+      [value]="language"
+      [aria-label]="language"
+      (click)="useLanguage(language)">
+      {{ language.toUpperCase() }}
     </mat-button-toggle>
   }
 </mat-button-toggle-group>
 ```
 
-### HomeComponent
+---
 
-`home.component.ts`:
+## Modificación del ToolbarComponent
+
+Agregar los siguientes imports al archivo `toolbar.component.ts` ubicado en `src/app/shared/presentation/components/toolbar`:
+
+```typescript
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { LanguageSwitcherComponent } from '../language-switcher/language-switcher.component';
+```
+
+Agregar las siguientes clases en el array `imports` del decorator `@Component`:
+
+```typescript
+MatToolbarModule, MatButtonModule, RouterLink, TranslateModule, LanguageSwitcherComponent
+```
+
+Reemplazar el contenido de la clase `ToolbarComponent` con el siguiente comentario TSDoc (el cuerpo queda vacío):
 
 ```typescript
 /**
- * @summary Home view displaying Fleet Utilization Analytics and Next Urgent Incident.
- * @author Tu Nombre y Apellido
+ * @summary Toolbar component with logo, navigation links and language switcher.
+ * @author Elynor Palma
  */
+```
+
+Reemplazar el contenido del archivo `toolbar.component.html`:
+
+```html
+<mat-toolbar color="primary" role="navigation" aria-label="Enterprise Fleet Manager toolbar">
+  <img
+    src="https://logo.clearbit.com/enterprise.com"
+    alt="Enterprise Rent-A-Car logo"
+    height="36"
+    aria-hidden="true"
+    style="margin-right: 8px;"
+  />
+  <span>{{ 'toolbar.title' | translate }}</span>
+
+  <span style="flex: 1 1 auto;"></span>
+
+  <a mat-button routerLink="/home" aria-label="Navigate to Home">
+    {{ 'toolbar.home' | translate }}
+  </a>
+  <a mat-button routerLink="/operations/rentals/new" aria-label="Navigate to New Rental">
+    {{ 'toolbar.newRental' | translate }}
+  </a>
+
+  <span style="margin-left: 16px;">
+    <app-language-switcher />
+  </span>
+</mat-toolbar>
+```
+
+Reemplazar el contenido del archivo `toolbar.component.scss`:
+
+```scss
+mat-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+```
+
+---
+
+## Modificación del HomeComponent
+
+Agregar los siguientes imports al archivo `home.component.ts` ubicado en `src/app/shared/presentation/views/home`:
+
+```typescript
 import { Component, inject, OnInit, Signal } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -788,69 +1057,81 @@ import { Vehicle } from '../../../../masters/domain/model/vehicle.entity';
 import { Incident } from '../../../../operations/domain/model/incident.entity';
 import { VehicleTypeStatsComponent } from '../../../../masters/presentation/components/vehicle-type-stats/vehicle-type-stats.component';
 import { NextUrgentIncidentComponent } from '../../../../operations/presentation/components/next-urgent-incident/next-urgent-incident.component';
+```
 
-@Component({
-  selector: 'app-home',
-  standalone: true,
-  imports: [TranslateModule, MatGridListModule, VehicleTypeStatsComponent, NextUrgentIncidentComponent],
-  templateUrl: './home.component.html'
-})
-export class HomeComponent implements OnInit {
-  private vehicleStore = inject(VehicleStoreService);
-  private operationsStore = inject(OperationsStoreService);
+Agregar las siguientes clases en el array `imports` del decorator `@Component`:
 
-  readonly vehicles: Signal<Vehicle[]> = this.vehicleStore.vehicles;
-  readonly incidents: Signal<Incident[]> = this.operationsStore.incidents;
+```typescript
+TranslateModule, MatGridListModule, VehicleTypeStatsComponent, NextUrgentIncidentComponent
+```
 
-  readonly vehicleTypes = ['ECONOMY', 'SUV', 'LUXURY'] as const;
+Agregar la interface `OnInit` a la clase `HomeComponent`:
 
-  ngOnInit(): void {
-    this.vehicleStore.loadAll();
-    this.operationsStore.loadAll();
-  }
+```typescript
+implements OnInit
+```
 
-  getVehiclesByType(type: string): Vehicle[] {
-    return this.vehicles().filter(v => v.vehicleType === type);
-  }
+Reemplazar el contenido de la clase `HomeComponent` con el siguiente código:
 
-  getIncidentsByVehicleType(type: string): Incident[] {
-    const vehicleIds = this.getVehiclesByType(type).map(v => v.id);
-    return this.incidents().filter(i => vehicleIds.includes(i.vehicleId));
-  }
+```typescript
+/**
+ * @summary Home view displaying Fleet Utilization Analytics and Next Urgent Incident sections.
+ * @author Elynor Palma
+ */
+private vehicleStore: VehicleStoreService = inject(VehicleStoreService);
+private operationsStore: OperationsStoreService = inject(OperationsStoreService);
 
-  get nextUrgentIncident(): Incident | null {
-    const normal = this.incidents()
-      .filter(i => i.priority === 'NORMAL')
-      .sort((a, b) => new Date(b.registeredAt).getTime() - new Date(a.registeredAt).getTime());
-    return normal[0] ?? null;
-  }
+readonly vehicles: Signal<Vehicle[]> = this.vehicleStore.vehicles;
+readonly incidents: Signal<Incident[]> = this.operationsStore.incidents;
+
+readonly vehicleTypes: string[] = ['ECONOMY', 'SUV', 'LUXURY'];
+
+ngOnInit(): void {
+  this.vehicleStore.loadAll();
+  this.operationsStore.loadAll();
+}
+
+getVehiclesByType(type: string): Vehicle[] {
+  return this.vehicles().filter(v => v.vehicleType === type);
+}
+
+getIncidentsByType(type: string): Incident[] {
+  const vehicleIds = this.getVehiclesByType(type).map(v => v.id);
+  return this.incidents().filter(i => vehicleIds.includes(i.vehicleId));
+}
+
+get nextUrgentIncident(): Incident | null {
+  const normalIncidents = this.incidents()
+    .filter(i => i.priority === 'NORMAL')
+    .sort((a, b) => new Date(b.registeredAt).getTime() - new Date(a.registeredAt).getTime());
+  return normalIncidents.length > 0 ? normalIncidents[0] : null;
 }
 ```
 
-`home.component.html`:
+Reemplazar el contenido del archivo `home.component.html`:
 
 ```html
-<main aria-label="Home page">
+<main aria-label="Home page" style="padding: 24px;">
   <h1>{{ 'home.title' | translate }}</h1>
   <p>{{ 'home.welcome' | translate }}</p>
 
-  <section aria-labelledby="fleet-analytics-title">
-    <h2 id="fleet-analytics-title">{{ 'home.fleetUtilization' | translate }}</h2>
+  <section aria-labelledby="fleet-title">
+    <h2 id="fleet-title">{{ 'home.fleetUtilization' | translate }}</h2>
     <mat-grid-list cols="3" rowHeight="220px" gutterSize="16px">
       @for (type of vehicleTypes; track type) {
         <mat-grid-tile>
           <app-vehicle-type-stats
             [vehicleType]="type"
             [vehicles]="getVehiclesByType(type)"
-            [incidents]="getIncidentsByVehicleType(type)"
+            [incidents]="getIncidentsByType(type)"
           />
         </mat-grid-tile>
       }
     </mat-grid-list>
   </section>
 
-  <section aria-labelledby="next-incident-title">
-    <h2 id="next-incident-title">{{ 'home.nextUrgentIncident' | translate }}</h2>
+  <section aria-labelledby="incident-title" style="margin-top: 32px;">
+    <h2 id="incident-title">{{ 'home.nextUrgentIncident' | translate }}</h2>
     @if (nextUrgentIncident) {
       <app-next-urgent-incident [incident]="nextUrgentIncident" />
     }
@@ -858,98 +1139,116 @@ export class HomeComponent implements OnInit {
 </main>
 ```
 
-### VehicleTypeStatsComponent
+---
 
-`vehicle-type-stats.component.ts`:
+## Modificación del VehicleTypeStatsComponent
+
+Agregar los siguientes imports al archivo `vehicle-type-stats.component.ts` ubicado en `src/app/masters/presentation/components/vehicle-type-stats`:
+
+```typescript
+import { input, InputSignal } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
+import { TranslateModule } from '@ngx-translate/core';
+import { CurrencyPipe } from '@angular/common';
+import { Vehicle } from '../../../domain/model/vehicle.entity';
+import { Incident } from '../../../../operations/domain/model/incident.entity';
+```
+
+Agregar en el array `imports` del decorator `@Component`:
+
+```typescript
+MatCardModule, TranslateModule, CurrencyPipe
+```
+
+Reemplazar el contenido de la clase `VehicleTypeStatsComponent` con el siguiente código:
 
 ```typescript
 /**
- * @summary Component displaying fleet statistics per vehicle type.
- * @author Tu Nombre y Apellido
+ * @summary Component displaying fleet utilization statistics per vehicle type.
+ * @author Elynor Palma
  */
-import { Component, input, InputSignal } from '@angular/core';
-import { MatCardModule } from '@angular/material/card';
-import { TranslateModule } from '@ngx-translate/core';
-import { Vehicle } from '../../../domain/model/vehicle.entity';
-import { Incident } from '../../../../operations/domain/model/incident.entity';
+vehicleType: InputSignal<string> = input.required<string>();
+vehicles: InputSignal<Vehicle[]> = input.required<Vehicle[]>();
+incidents: InputSignal<Incident[]> = input.required<Incident[]>();
 
-@Component({
-  selector: 'app-vehicle-type-stats',
-  standalone: true,
-  imports: [MatCardModule, TranslateModule],
-  templateUrl: './vehicle-type-stats.component.html'
-})
-export class VehicleTypeStatsComponent {
-  vehicleType: InputSignal<string> = input.required<string>();
-  vehicles: InputSignal<Vehicle[]> = input.required<Vehicle[]>();
-  incidents: InputSignal<Incident[]> = input.required<Incident[]>();
+get dailyRevenuePotential(): number {
+  return this.vehicles()
+    .filter(v => v.status === 'RENTED')
+    .reduce((sum, v) => sum + v.dailyRate, 0);
+}
 
-  get dailyRevenuePotential(): number {
-    return this.vehicles()
-      .filter(v => v.status === 'RENTED')
-      .reduce((sum, v) => sum + v.dailyRate, 0);
-  }
+get estimatedIncidentCost(): number {
+  const total = this.incidents().reduce((sum, i) => {
+    const factor = i.priority === 'HIGH' ? 2.0 : 1.0;
+    return sum + (i.estimatedRepairCost * factor);
+  }, 0);
+  return Math.round(total * 100) / 100;
+}
 
-  get estimatedIncidentCost(): number {
-    const total = this.incidents().reduce((sum, i) => {
-      const factor = i.priority === 'HIGH' ? 2.0 : 1.0;
-      return sum + i.estimatedRepairCost * factor;
-    }, 0);
-    return Math.round(total * 100) / 100;
-  }
-
-  get vehiclesRented(): number {
-    return this.vehicles().filter(v => v.status === 'RENTED').length;
-  }
+get vehiclesRented(): number {
+  return this.vehicles().filter(v => v.status === 'RENTED').length;
 }
 ```
 
-`vehicle-type-stats.component.html`:
+Reemplazar el contenido del archivo `vehicle-type-stats.component.html`:
 
 ```html
-<mat-card aria-label="Vehicle type stats card" style="width: 100%;">
+<mat-card style="width: 100%;" aria-label="Vehicle type statistics card">
   <mat-card-header>
     <mat-card-title>{{ vehicleType() }}</mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <p><strong>{{ 'vehicleTypeStats.dailyRevenuePotential' | translate }}:</strong> {{ dailyRevenuePotential | currency }}</p>
-    <p><strong>{{ 'vehicleTypeStats.estimatedIncidentCost' | translate }}:</strong> {{ estimatedIncidentCost | currency }}</p>
+    <p>
+      <strong>{{ 'vehicleTypeStats.dailyRevenuePotential' | translate }}:</strong>
+      {{ dailyRevenuePotential | currency }}
+    </p>
+    <p>
+      <strong>{{ 'vehicleTypeStats.estimatedIncidentCost' | translate }}:</strong>
+      {{ estimatedIncidentCost | currency }}
+    </p>
   </mat-card-content>
-  <mat-card-footer>
-    <p>{{ 'vehicleTypeStats.vehiclesRented' | translate }}: {{ vehiclesRented }}</p>
+  <mat-card-footer style="padding: 8px 16px;">
+    <p>
+      <strong>{{ 'vehicleTypeStats.vehiclesRented' | translate }}:</strong>
+      {{ vehiclesRented }}
+    </p>
   </mat-card-footer>
 </mat-card>
 ```
 
-### NextUrgentIncidentComponent
+---
 
-`next-urgent-incident.component.ts`:
+## Modificación del NextUrgentIncidentComponent
+
+Agregar los siguientes imports al archivo `next-urgent-incident.component.ts` ubicado en `src/app/operations/presentation/components/next-urgent-incident`:
+
+```typescript
+import { input, InputSignal } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
+import { DatePipe } from '@angular/common';
+import { Incident } from '../../../domain/model/incident.entity';
+```
+
+Agregar en el array `imports` del decorator `@Component`:
+
+```typescript
+MatCardModule, DatePipe
+```
+
+Reemplazar el contenido de la clase `NextUrgentIncidentComponent` con el siguiente código:
 
 ```typescript
 /**
  * @summary Component displaying the most recent incident with NORMAL priority.
- * @author Tu Nombre y Apellido
+ * @author Elynor Palma
  */
-import { Component, input, InputSignal } from '@angular/core';
-import { MatCardModule } from '@angular/material/card';
-import { DatePipe } from '@angular/common';
-import { Incident } from '../../../domain/model/incident.entity';
-
-@Component({
-  selector: 'app-next-urgent-incident',
-  standalone: true,
-  imports: [MatCardModule, DatePipe],
-  templateUrl: './next-urgent-incident.component.html'
-})
-export class NextUrgentIncidentComponent {
-  incident: InputSignal<Incident> = input.required<Incident>();
-}
+incident: InputSignal<Incident> = input.required<Incident>();
 ```
 
-`next-urgent-incident.component.html`:
+Reemplazar el contenido del archivo `next-urgent-incident.component.html`:
 
 ```html
-<mat-card aria-label="Next urgent incident">
+<mat-card aria-label="Next urgent incident card" style="max-width: 400px;">
   <mat-card-header>
     <mat-card-title>{{ incident().incidentType }}</mat-card-title>
     <mat-card-subtitle>{{ incident().registeredAt | date:'medium' }}</mat-card-subtitle>
@@ -957,187 +1256,223 @@ export class NextUrgentIncidentComponent {
   <mat-card-content>
     <p><strong>Vehicle ID:</strong> {{ incident().vehicleId }}</p>
     <p><strong>Priority:</strong> {{ incident().priority }}</p>
-    <p><strong>Estimated Cost:</strong> {{ incident().estimatedRepairCost | currency }}</p>
+    <p><strong>Estimated Repair Cost:</strong> {{ incident().estimatedRepairCost | currency }}</p>
   </mat-card-content>
 </mat-card>
 ```
 
-### NewRentalComponent
+---
 
-`new-rental.component.ts`:
+## Modificación del NewRentalComponent
+
+Agregar los siguientes imports al archivo `new-rental.component.ts` ubicado en `src/app/operations/presentation/views/new-rental`:
 
 ```typescript
-/**
- * @summary View component for creating a new rental contract.
- * @author Tu Nombre y Apellido
- */
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, inject, OnInit, signal, WritableSignal } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { TranslateModule } from '@ngx-translate/core';
-import { OperationsStoreService } from '../../../application/operations-store.service';
 import { VehicleStoreService } from '../../../../masters/application/vehicle-store.service';
+import { OperationsStoreService } from '../../../application/operations-store.service';
+import { Vehicle } from '../../../../masters/domain/model/vehicle.entity';
 import { Rental } from '../../../domain/model/rental.entity';
 import { Incident } from '../../../domain/model/incident.entity';
-import { Vehicle } from '../../../../masters/domain/model/vehicle.entity';
+```
 
-@Component({
-  selector: 'app-new-rental',
-  standalone: true,
-  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatSelectModule, TranslateModule],
-  templateUrl: './new-rental.component.html'
-})
-export class NewRentalComponent implements OnInit {
-  private fb = inject(FormBuilder);
-  private router = inject(Router);
-  private operationsStore = inject(OperationsStoreService);
-  private vehicleStore = inject(VehicleStoreService);
+Agregar en el array `imports` del decorator `@Component`:
 
-  availableVehicles = signal<Vehicle[]>([]);
+```typescript
+ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatSelectModule, TranslateModule
+```
 
-  form = this.fb.group({
-    vehicleId: [0, Validators.required],
-    clientId: [0, [Validators.required, Validators.min(1)]],
-    durationDays: [1, [Validators.required, Validators.min(1)]]
-  });
+Agregar la interface `OnInit` a la clase `NewRentalComponent`:
 
-  ngOnInit(): void {
-    this.vehicleStore.loadAll();
-    this.operationsStore.loadAll();
-    this.vehicleStore.vehicles;
-    // Show only available vehicles (no active rental)
-    this.vehicleStore.loadAll();
-    setTimeout(() => {
-      const rentedIds = this.operationsStore.rentals()
-        .filter(r => r.status === 'ACTIVE')
-        .map(r => r.vehicleId);
-      this.availableVehicles.set(
-        this.vehicleStore.vehicles().filter(v => !rentedIds.includes(v.id))
-      );
-    }, 500);
-  }
+```typescript
+implements OnInit
+```
 
-  onSubmit(): void {
-    if (this.form.invalid) return;
+Reemplazar el contenido de la clase `NewRentalComponent` con el siguiente código:
 
-    const { vehicleId, clientId, durationDays } = this.form.value;
-    const vehicle = this.vehicleStore.vehicles().find(v => v.id === vehicleId);
-    if (!vehicle) return;
+```typescript
+/**
+ * @summary View component for creating a new rental contract with automatic incident generation.
+ * @author Elynor Palma
+ */
+private fb: FormBuilder = inject(FormBuilder);
+private router: Router = inject(Router);
+private vehicleStore: VehicleStoreService = inject(VehicleStoreService);
+private operationsStore: OperationsStoreService = inject(OperationsStoreService);
 
-    const startDate = new Date();
-    const endDate = new Date(startDate);
-    endDate.setDate(endDate.getDate() + (durationDays ?? 1));
+availableVehicles: WritableSignal<Vehicle[]> = signal<Vehicle[]>([]);
 
-    const rental: Rental = {
-      vehicleId: vehicleId!,
-      clientId: clientId!,
-      startDate: startDate.toISOString(),
-      endDate: endDate.toISOString(),
-      durationDays: durationDays!,
-      totalCost: durationDays! * vehicle.dailyRate,
-      status: 'ACTIVE'
-    };
+form: FormGroup = this.fb.group({
+  vehicleId: [null, Validators.required],
+  clientId: [null, [Validators.required, Validators.min(1)]],
+  durationDays: [1, [Validators.required, Validators.min(1)]]
+});
 
-    this.operationsStore.createRental(rental).subscribe(created => {
-      const incident: Incident = {
-        vehicleId: vehicleId!,
-        rentalId: created.id ?? null,
-        incidentType: 'CLEANING',
-        registeredAt: new Date().toISOString(),
-        estimatedRepairCost: 50.00,
-        priority: 'NORMAL'
-      };
-      this.operationsStore.createIncident(incident).subscribe(() => {
-        this.router.navigate(['/home']);
-      });
+ngOnInit(): void {
+  this.vehicleStore.loadAll();
+  this.operationsStore.loadAll();
+  setTimeout(() => {
+    const activeVehicleIds = this.operationsStore.rentals()
+      .filter(r => r.status === 'ACTIVE')
+      .map(r => r.vehicleId);
+    this.availableVehicles.set(
+      this.vehicleStore.vehicles().filter(v => !activeVehicleIds.includes(v.id))
+    );
+  }, 600);
+}
+
+onSubmit(): void {
+  if (this.form.invalid) return;
+
+  const { vehicleId, clientId, durationDays } = this.form.value;
+  const vehicle = this.vehicleStore.vehicles().find(v => v.id === vehicleId);
+  if (!vehicle) return;
+
+  const startDate = new Date();
+  const endDate = new Date(startDate);
+  endDate.setDate(endDate.getDate() + durationDays);
+
+  const rental = new Rental();
+  rental.vehicleId = vehicleId;
+  rental.clientId = clientId;
+  rental.startDate = startDate.toISOString();
+  rental.endDate = endDate.toISOString();
+  rental.durationDays = durationDays;
+  rental.totalCost = durationDays * vehicle.dailyRate;
+  rental.status = 'ACTIVE';
+
+  this.operationsStore.createRental(rental).subscribe(created => {
+    const incident = new Incident();
+    incident.vehicleId = vehicleId;
+    incident.rentalId = created.id;
+    incident.incidentType = 'CLEANING';
+    incident.registeredAt = new Date().toISOString();
+    incident.estimatedRepairCost = 50.00;
+    incident.priority = 'NORMAL';
+
+    this.operationsStore.createIncident(incident).subscribe(() => {
+      this.router.navigate(['/home']);
     });
-  }
+  });
+}
 
-  onCancel(): void {
-    this.router.navigate(['/home']);
-  }
+onCancel(): void {
+  this.router.navigate(['/home']);
 }
 ```
 
-`new-rental.component.html`:
+Reemplazar el contenido del archivo `new-rental.component.html`:
 
 ```html
-<main aria-label="New rental form">
+<main aria-label="New rental form" style="padding: 24px; max-width: 500px;">
   <h1>{{ 'newRental.title' | translate }}</h1>
   <h2>{{ 'newRental.subtitle' | translate }}</h2>
 
-  <form [formGroup]="form" (ngSubmit)="onSubmit()" aria-label="Create rental form">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" aria-label="Create new rental contract">
 
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" style="width: 100%;">
       <mat-label>{{ 'newRental.vehicleId' | translate }}</mat-label>
-      <mat-select formControlName="vehicleId" aria-label="Vehicle selection">
+      <mat-select formControlName="vehicleId" aria-label="Select vehicle">
         @for (vehicle of availableVehicles(); track vehicle.id) {
           <mat-option [value]="vehicle.id">
-            {{ vehicle.make }} {{ vehicle.model }} ({{ vehicle.vehicleType }})
+            {{ vehicle.make }} {{ vehicle.model }} — {{ vehicle.vehicleType }}
           </mat-option>
         }
       </mat-select>
     </mat-form-field>
 
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" style="width: 100%;">
       <mat-label>{{ 'newRental.clientId' | translate }}</mat-label>
-      <input matInput type="number" formControlName="clientId" aria-label="Client ID" />
+      <input
+        matInput
+        type="number"
+        formControlName="clientId"
+        aria-label="Client ID"
+        placeholder="e.g. 201"
+      />
     </mat-form-field>
 
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" style="width: 100%;">
       <mat-label>{{ 'newRental.durationDays' | translate }}</mat-label>
-      <input matInput type="number" formControlName="durationDays" aria-label="Duration in days" />
+      <input
+        matInput
+        type="number"
+        formControlName="durationDays"
+        aria-label="Duration in days"
+        placeholder="e.g. 3"
+      />
     </mat-form-field>
 
-    <div>
-      <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid" aria-label="Create rental">
+    <div style="display: flex; gap: 12px; margin-top: 16px;">
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="form.invalid"
+        aria-label="Create rental">
         {{ 'newRental.create' | translate }}
       </button>
-      <button mat-button type="button" (click)="onCancel()" aria-label="Cancel">
+      <button
+        mat-button
+        type="button"
+        (click)="onCancel()"
+        aria-label="Cancel and go back to home">
         {{ 'newRental.cancel' | translate }}
       </button>
     </div>
+
   </form>
 </main>
 ```
 
-### PageNotFoundComponent
+---
 
-`page-not-found.component.ts`:
+## Modificación del PageNotFoundComponent
+
+Agregar los siguientes imports al archivo `page-not-found.component.ts` ubicado en `src/app/shared/presentation/views/page-not-found`:
+
+```typescript
+import { inject } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { TranslateModule } from '@ngx-translate/core';
+```
+
+Agregar en el array `imports` del decorator `@Component`:
+
+```typescript
+MatButtonModule, RouterLink, TranslateModule
+```
+
+Reemplazar el contenido de la clase `PageNotFoundComponent` con el siguiente código:
 
 ```typescript
 /**
  * @summary Page not found view for unsupported navigation routes.
- * @author Tu Nombre y Apellido
+ * @author Elynor Palma
  */
-import { Component, inject } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
-import { MatButtonModule } from '@angular/material/button';
-import { TranslateModule } from '@ngx-translate/core';
-
-@Component({
-  selector: 'app-page-not-found',
-  standalone: true,
-  imports: [MatButtonModule, RouterLink, TranslateModule],
-  templateUrl: './page-not-found.component.html'
-})
-export class PageNotFoundComponent {
-  private router = inject(Router);
-  currentUrl = this.router.url;
-}
+private router: Router = inject(Router);
+currentUrl: string = this.router.url;
 ```
 
-`page-not-found.component.html`:
+Reemplazar el contenido del archivo `page-not-found.component.html`:
 
 ```html
-<main aria-label="Page not found">
+<main aria-label="Page not found" style="padding: 48px; text-align: center;">
   <h1>404</h1>
   <p>{{ 'notFound.message' | translate }} <code>{{ currentUrl }}</code></p>
-  <a mat-raised-button color="primary" routerLink="/home" aria-label="Go to Home">
+  <a
+    mat-raised-button
+    color="primary"
+    routerLink="/home"
+    aria-label="Return to home page">
     {{ 'notFound.back' | translate }}
   </a>
 </main>
@@ -1147,27 +1482,29 @@ export class PageNotFoundComponent {
 
 ## Modificación del AppComponent
 
-`src/app/app.component.ts`:
+Agregar los siguientes imports al archivo `app.component.ts` ubicado en `src/app`:
+
+```typescript
+import { RouterOutlet } from '@angular/router';
+import { ToolbarComponent } from './shared/presentation/components/toolbar/toolbar.component';
+```
+
+Agregar en el array `imports` del decorator `@Component`:
+
+```typescript
+RouterOutlet, ToolbarComponent
+```
+
+Reemplazar el contenido de la clase `AppComponent` con el comentario TSDoc:
 
 ```typescript
 /**
  * @summary Root application component.
- * @author Tu Nombre y Apellido
+ * @author Elynor Palma
  */
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { ToolbarComponent } from './shared/presentation/components/toolbar/toolbar.component';
-
-@Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet, ToolbarComponent],
-  templateUrl: './app.component.html'
-})
-export class AppComponent {}
 ```
 
-`src/app/app.component.html`:
+Reemplazar el contenido del archivo `app.component.html`:
 
 ```html
 <app-toolbar />
@@ -1178,33 +1515,36 @@ export class AppComponent {}
 
 ## Ejecución del proyecto
 
-**Terminal 1 — json-server:**
+**Terminal 1 — json-server (nuevo Tab):**
 
-```bash
+```
 cd server
 json-server --watch db.json
 ```
 
 **Terminal 2 — Angular:**
 
-```bash
+```
 ng serve --port 4200
 ```
 
-Abre el navegador en: http://localhost:4200
+Abrir el navegador en: http://localhost:4200
 
 ---
 
 ## Preparación del entregable
 
-Antes de empaquetar el `.zip`, elimina la carpeta `node_modules`:
+Antes de generar el archivo `.zip`, eliminar la carpeta `node_modules`:
 
-```bash
-rm -rf node_modules   # Mac/Linux
-rmdir /s node_modules # Windows
+```
+# Mac / Linux
+rm -rf node_modules
+
+# Windows
+rmdir /s /q node_modules
 ```
 
-Nombra el archivo:
+Comprimir el proyecto y nombrar el archivo:
 
 ```
 ea<nrc>u<codigo>.zip
@@ -1216,6 +1556,8 @@ Ejemplo: `ea7377u20241a972.zip`
 
 ## README.md
 
+Reemplazar el contenido del archivo `README.md` en la raíz del proyecto:
+
 ```markdown
 # Enterprise Fleet Manager
 
@@ -1224,29 +1566,33 @@ Web application for fleet management built for Enterprise Rent-A-Car.
 ## Description
 
 Enterprise Fleet Manager is an Angular-based frontend application that provides
-fleet utilization analytics, rental management, and incident tracking for
-Enterprise Rent-A-Car's vehicle fleet.
+fleet utilization analytics, rental contract management, and incident tracking
+for Enterprise Rent-A-Car's vehicle fleet. The application consumes a REST API
+simulated with json-server and follows a domain-driven architecture with layered
+and component-based design patterns.
 
 ## Features
 
-- Fleet Utilization Analytics by vehicle type
+- Fleet Utilization Analytics by vehicle type (ECONOMY, SUV, LUXURY)
+- Daily Revenue Potential and Estimated Incident Cost indicators per vehicle type
 - Next Urgent Incident display
-- New Rental contract creation with automatic incident generation
-- Internationalization (EN / ES)
+- New Rental contract creation with automatic cleaning incident generation
+- Internationalization support (EN / ES) with ngx-translate
 - Responsive UI with Angular Material
+- Page Not Found view for unsupported routes
 
 ## Tech Stack
 
 - Angular 20+
 - Angular Material
-- ngx-translate
-- json-server (fake REST API)
+- @ngx-translate/core
+- json-server 0.17.4 (fake REST API)
 - TypeScript
 
 ## Author
 
-**Your Name**  
-Universidad Peruana de Ciencias Aplicadas (UPC)  
+**Elynor Palma**
+Universidad Peruana de Ciencias Aplicadas (UPC)
 Course: Desarrollo de Aplicaciones Open Source (1ASI0729)
 ```
 
@@ -1259,7 +1605,9 @@ Course: Desarrollo de Aplicaciones Open Source (1ASI0729)
 - https://ngx-translate.org/
 - https://github.com/typicode/json-server/tree/v0
 - https://angular.dev/guide/routing/common-router-tasks
+- https://angular.dev/guide/routing/router-tutorial#adding-a-404-page
 - https://angular.dev/guide/http
+- https://angular.dev/api/common/DatePipe
 - https://material.angular.io/components/card/overview
 - https://material.angular.io/components/grid-list/overview
 - https://material.angular.io/components/toolbar/overview
