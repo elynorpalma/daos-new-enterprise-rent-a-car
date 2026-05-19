@@ -35,6 +35,24 @@ SCSS
 N
 ```
 
+### Cambiar el propietario del proyecto creado con sudo (Solo MAC)
+
+> **Solo ejecutar si estás en un equipo MAC:**
+
+Ejecutar los siguientes commands:
+
+```
+cd ..
+```
+
+```
+sudo chown -R alumnos ./ea<nrc>u<codigo>
+```
+
+```
+ls -l
+```
+
 ### Instalación de Angular Material
 
 Ingresar a la carpeta creada con el mismo nombre que el proyecto ejecutando:
@@ -178,20 +196,28 @@ Crear la carpeta `server` en la raíz del proyecto y copiar dentro el archivo `d
 📂 ea<nrc>u<codigo>
   📂 server
     db.json
+    routes.json
+```
+
+Crear el archivo `routes.json` en la carpeta `server/` con el siguiente contenido:
+
+```json
+{
+  "/api/v1/*": "/$1"
+}
 ```
 
 Cargar el Terminal del IDE y agregar un nuevo Tab. Ejecutar el siguiente comando para iniciar el json-server:
 
 ```
-cd server
-json-server --watch db.json
+json-server --watch server/db.json --routes server/routes.json
 ```
 
 Verificar que los endpoints funcionen en el navegador:
 
-- http://localhost:3000/vehicles
-- http://localhost:3000/rentals
-- http://localhost:3000/incidents
+- http://localhost:3000/api/v1/vehicles
+- http://localhost:3000/api/v1/rentals
+- http://localhost:3000/api/v1/incidents
 
 ---
 
@@ -208,7 +234,7 @@ El archivo `environment.development.ts` ubicado en `src/environments` debe queda
 ```typescript
 export const environment = {
   production: false,
-  serverBasePath: 'http://localhost:3000',
+  serverBasePath: 'http://localhost:3000/api/v1',
   vehiclesEndpointPath: '/vehicles',
   rentalsEndpointPath: '/rentals',
   incidentsEndpointPath: '/incidents'
@@ -220,7 +246,7 @@ El archivo `environment.ts` ubicado en `src/environments` debe quedar así:
 ```typescript
 export const environment = {
   production: true,
-  serverBasePath: 'http://localhost:3000',
+  serverBasePath: 'http://localhost:3000/api/v1',
   vehiclesEndpointPath: '/vehicles',
   rentalsEndpointPath: '/rentals',
   incidentsEndpointPath: '/incidents'
@@ -1006,7 +1032,7 @@ Reemplazar el contenido de la clase `ToolbarComponent` con el siguiente comentar
 Reemplazar el contenido del archivo `toolbar.component.html`:
 
 ```html
-<mat-toolbar color="primary" role="navigation" aria-label="Enterprise Fleet Manager toolbar">
+<mat-toolbar style="background-color: #b71c1c; color: white;" role="navigation" aria-label="Enterprise Fleet Manager toolbar">
   <img
     src="https://logo.clearbit.com/enterprise.com"
     alt="Enterprise Rent-A-Car logo"
@@ -1018,10 +1044,10 @@ Reemplazar el contenido del archivo `toolbar.component.html`:
 
   <span style="flex: 1 1 auto;"></span>
 
-  <a mat-button routerLink="/home" aria-label="Navigate to Home">
+  <a mat-button routerLink="/home" aria-label="Navigate to Home" style="color: white;">
     {{ 'toolbar.home' | translate }}
   </a>
-  <a mat-button routerLink="/operations/rentals/new" aria-label="Navigate to New Rental">
+  <a mat-button routerLink="/operations/rentals/new" aria-label="Navigate to New Rental" style="color: white;">
     {{ 'toolbar.newRental' | translate }}
   </a>
 
@@ -1225,14 +1251,14 @@ Agregar los siguientes imports al archivo `next-urgent-incident.component.ts` ub
 ```typescript
 import { input, InputSignal } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
-import { DatePipe } from '@angular/common';
+import { DatePipe, CurrencyPipe } from '@angular/common';
 import { Incident } from '../../../domain/model/incident.entity';
 ```
 
 Agregar en el array `imports` del decorator `@Component`:
 
 ```typescript
-MatCardModule, DatePipe
+MatCardModule, DatePipe, CurrencyPipe
 ```
 
 Reemplazar el contenido de la clase `NextUrgentIncidentComponent` con el siguiente código:
@@ -1325,7 +1351,7 @@ ngOnInit(): void {
     this.availableVehicles.set(
       this.vehicleStore.vehicles().filter(v => !activeVehicleIds.includes(v.id))
     );
-  }, 600);
+  }, 1000);
 }
 
 onSubmit(): void {
@@ -1509,6 +1535,20 @@ Reemplazar el contenido del archivo `app.component.html`:
 ```html
 <app-toolbar />
 <router-outlet />
+```
+
+---
+
+## styles.scss
+
+Reemplazar el contenido del archivo `src/styles.scss`:
+
+```scss
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
 ```
 
 ---
